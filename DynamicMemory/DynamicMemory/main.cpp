@@ -5,12 +5,15 @@ using std::cout;
 using std::endl;;
 
 void FillRand(int arr[], const unsigned int n, int minRand = 0, int maxRand = 100);
+void FillRand(double arr[], const unsigned int n, double minRand = 0.0, double maxRand = 100.0);
 void FillRand(int** arr, const int rows, const int cols);
 
 void Print(int arr[], const unsigned int n);
+void Print(double arr[], const unsigned int n);
 void Print(int** arr, const int rows, const int cols);
 
 int* push_back(int arr[], unsigned int& n, int value);
+double* push_back(double arr[], unsigned int& n, int value)
 int* push_front(int arr[], unsigned int& n, int value);
 int* insert(int arr[], unsigned int& n, int value, unsigned int index);
 int* pop_back(int arr[], unsigned int& n);
@@ -25,8 +28,8 @@ int** pop_row_back(int** arr, unsigned int& rows, const unsigned int cols);
 
 void push_col_back(int** arr, const unsigned int rows, unsigned int& cols);
 
-//#define DYNAMIC_MEMORY_1
-#define DYNAMIC_MEMORY_2
+#define DYNAMIC_MEMORY_1
+//#define DYNAMIC_MEMORY_2
 //#define PREFORMANCE_CHECK
 
 void main()
@@ -35,7 +38,7 @@ void main()
 #ifdef DYNAMIC_MEMORY_1
 	unsigned int n;	//Размер массива
 	cout << "Введите размер массива: "; cin >> n;
-	int* arr = new int[n] {};
+	double* arr = new [n] {};
 
 	FillRand(arr, n);
 	Print(arr, n);
@@ -44,7 +47,7 @@ void main()
 	cout << "Введите добавляемое значение: "; cin >> value;
 	arr = push_back(arr, n, value);
 	Print(arr, n);
-	cout << "Введите добавляемое значение: "; cin >> value;
+	/*cout << "Введите добавляемое значение: "; cin >> value;
 	arr = push_front(arr, n, value);
 	Print(arr, n);
 
@@ -55,7 +58,7 @@ void main()
 	Print(arr, n);
 	cout << "\n---------------------------------------------\n";
 	arr = pop_back(arr, n);
-	Print(arr, n);
+	Print(arr, n);*/
 
 	delete[] arr;
 #endif // DYNAMIC_MEMORY_1
@@ -143,6 +146,27 @@ int* push_back(int arr[], unsigned int& n, int value)
 {
 	//1) Создаем буферный массив:
 	int* buffer = new int[n + 1]{};
+	//2) Копируем значения из исходного массива в буферный:
+	for (int i = 0; i < n; i++)
+	{
+		buffer[i] = arr[i];
+	}
+	//3) Удаляем исходный массив:
+	delete[] arr;
+	//4) Теперь buffer выглядит точно так же, как должен выглядить arr
+	//поэтому подменяем адрес старого массива адресом ного (буферного) массива:
+	arr = buffer;	//перезаписываем адрес старого массива адресом нового массива
+	//5) Только после всего этого в массив arr можно добавить значение:
+	arr[n] = value;	//Добавляем значение в конец массива
+	//6) После того как в массиве добавился элемент, количество его элементов увеличивается на 1
+	n++;
+	//7) Значение добавлено
+	return arr;	//Возвращаем адрес нового массива, с добавленным значением.
+}
+double* push_back(double arr[], unsigned int& n, int value)
+{
+	//1) Создаем буферный массив:
+	double* buffer = new double[n + 1]{};
 	//2) Копируем значения из исходного массива в буферный:
 	for (int i = 0; i < n; i++)
 	{
